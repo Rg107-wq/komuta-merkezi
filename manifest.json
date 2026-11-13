@@ -2,6 +2,7 @@
   "name": "Cep Komuta Merkezi",
   "short_name": "Komuta",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#0b0d12",
   "theme_color": "#0b0d12",
@@ -13,40 +14,3 @@
     }
   ]
 }
-```[cite: 12]
-
-#### 2. `sw.js` Dosyanı Şununla Değiştir:
-Service Worker'ın düzgün kurulabilmesi için rota dizinlerini güncelleyelim[cite: 11]:
-```javascript
-const CACHE_NAME = 'komuta-v2';
-const ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icon.png'
-];
-
-self.addEventListener('install', (e) => {
-  self.skipWaiting();
-  e.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
-  );
-});
-
-self.addEventListener('activate', (e) => {
-  e.waitUntil(clients.claim());
-});
-
-self.addEventListener('fetch', (e) => {
-  e.respondWith(
-    caches.match(e.request).then((res) => res || fetch(e.request))
-  );
-});
-```[cite: 11]
-
-#### 3. Tekrar ZIP Yapıp Yükleme:
-* Bu güncellediğin 4 dosyayı (`index.html`, `manifest.json`, `sw.js`, `icon.png`) yine **aynı klasör içine** koy.
-* Hepsini seçip **tekrar bir ZIP dosyası** yap.
-* Netlify'daki proje paneline bu yeni ZIP dosyasını sürükleyip bırakarak yeniden yayınla.
-
-Telefondan sayfayı açıp önbelleği temizledikten sonra (veya gizli sekmeden girdiğinde) "Bu uygulama yüklenemez" uyarısının kaybolduğunu ve doğrudan **"Yükle"** butonunun aktif olduğunu göreceksin.
